@@ -1,49 +1,37 @@
 # Simloud cost saving configuration
 
-### Supported cloud resources3:
+### 1. Billing (actual usage cost)
 
-1. Stand alone EC2 instances.
-2. Auto scaling for EC2 instances
-3. RDS
+To grant Simloud access to the calculation of actual usage cost, need to perform manual operations (they cannot be automated by Simloud due to restrictions from AWS side):
 
-### Configuration:
+**Step 1** - enable [cost explorer](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/ce-enable.html).
 
-1. Create Access role:
+**Step 2** - enable Simloud tag through cost allocation tag:
 
-- Download following [CloudFormation script](https://drive.google.com/file/d/1JCgKJ4DRPt2Ipm6cvELNQAaYlvB8LtRW/view?usp=sharing).
-- Open your AWS account console CloudFormation service and press the **Create stack** button.
+1.  Create and deploy at least one [infrastructure](https://console.aws.amazon.com/billing/home#/preferences/tags) using Simloud UI.
+2.  In AWS Console, go to Services Billing Cost allocation tags, choose **User-Defined Cost Allocation Tags** tab.
+3.  Find _simloud:environment_ tag (you can search input box), check it and press **Activate**.
+    If tag was not found, need to wait up to 24 hours OR try to press **Refresh**.
 
 ![](/img/cost-saving/configuration/image1.png)
 
-- Chose the following options, upload the script and click on the **Next** button.
+https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/activating-tags.html
+
+**Step 3** - required If you use nested (linked) accounts:
+
+1.  In [AWS Console](https://console.aws.amazon.com/cost-management/home#/settings), sign in it to root account.
+2.  Go to Services Cost Explorer Preferences.
+3.  In AWS Cost Explorer section, check **Linked Account Access**, **Linked Account Refunds and Credits**, and **Linked Account Discounts**.
+4.  Press **Save preferences**.
 
 ![](/img/cost-saving/configuration/image2.png)
+
+### 2. Configure Account in Simloud Portal
+
+1. In Simloud Portal enter on Cloud management > accounts page, create new account and click on "How to get Account role?" button
+
 ![](/img/cost-saving/configuration/image3.png)
 
-- Scroll down and click again on the **Next** button.
+2. Then follow this instruction.
 
 ![](/img/cost-saving/configuration/image4.png)
-
-- Scroll down and select the following options and press the **Create stack** button.
-
-![](/img/cost-saving/configuration/image5.png)
-
-- Wait couple of minutes until the script completes (CREATE_COMPLETE status).
-
-![](/img/cost-saving/configuration/image6.png)
-
-- Go to Outputs tab and copy the following value:
-
-![](/img/cost-saving/configuration/image7.png)
-
-Paste this value into Account Role field and press the **Save** button.
-
-![](/img/cost-saving/configuration/image8.png)
-
-2. Per cloud resource add the following tag:
-
-   Key: `simloud:environment`.
-
-   Value: `<your-environment-name>`.
-
-![](/img/cost-saving/configuration/image9.png)
